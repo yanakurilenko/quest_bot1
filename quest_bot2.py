@@ -1,6 +1,6 @@
 import json
 import telebot
-from quest_bot.info import start, go, left_choice, right_choice, lose1, lose2, win1, win2, again
+from info import start, go, left_choice, right_choice, lose1, lose2, win1, win2, again
 from telebot import types
 
 TOKEN = ("введите токен для своего бота:")
