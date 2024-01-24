@@ -3,7 +3,7 @@ import telebot
 from info import start, go, left_choice, right_choice, lose1, lose2, win1, win2, again
 from telebot import types
 
-TOKEN = "6685252782:AAFtpqQ5Or8i_cLoCL7XxGbeaqpNUXA45RY"
+TOKEN =input("Ведите токен для своего бота")
 bot = telebot.TeleBot(TOKEN)
 
 def save_user_data(result):
