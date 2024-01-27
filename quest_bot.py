@@ -1,9 +1,9 @@
 import json
 import telebot
-from info import start, go, left_choice, right_choice, lose1, lose2, win1, win2, again
+from quest_bot.info1 import start, again, locations
 from telebot import types
 
-TOKEN =input("Ведите токен для своего бота")
+TOKEN = input("Введите токен:")
 bot = telebot.TeleBot(TOKEN)
 
 def save_user_data(result):
@@ -31,64 +31,64 @@ def say_start(message):
 @bot.message_handler(commands=['go'])
 def handle_go(message):
     bot.send_photo(message.chat.id, open('cave1.jpg', 'rb'))
-    bot.send_message(message.chat.id, go)
+    bot.send_message(message.chat.id, locations['cave']['message'])
     keyboard = types.ReplyKeyboardMarkup(row_width=2)
-    button_right = types.KeyboardButton(text="Пожалуй-ка я пойду направо...")
-    button_left = types.KeyboardButton(text="Лево мне больше нравится...")
-    keyboard.add(button_right, button_left)
+    button_left = types.KeyboardButton(text=locations['cave']['choice1'])
+    button_right = types.KeyboardButton(text=locations['cave']['choice2'])
+    keyboard.add(button_left,button_right)
     bot.send_photo(message.chat.id, open('bats.jpg', 'rb'))
     bot.send_message(message.chat.id, "Выберите направление:", reply_markup=keyboard)
 @bot.message_handler(func=lambda message: True)
 def handle_choices(message):
     user_dict = load_user_data(str(message.chat.id))
 
-    if message.text == "Лево мне больше нравится...":
+    if message.text ==locations['cave']['choice1']:
         user_dict[str(message.chat.id)]['first_question']=message.text
         save_user_data(user_dict)
-        bot.send_message(message.chat.id, left_choice)
+        bot.send_message(message.chat.id, locations['apple_tree']['message'])
         keyboard = types.ReplyKeyboardMarkup(row_width=2)
-        button_eat = types.KeyboardButton(text="Я очень голоден, не могу удержаться...")
-        button_not_eat = types.KeyboardButton(text="Потерплю до дома, хотя так хочется")
+        button_eat = types.KeyboardButton(text=locations['apple_tree']['choice1'])
+        button_not_eat = types.KeyboardButton(text=locations['apple_tree']['choice2'])
         keyboard.add(button_eat, button_not_eat)
         bot.send_photo(message.chat.id, open('apple_tree1.jpg', 'rb'))
         return bot.send_message(message.chat.id, "Что будешь делать?", reply_markup=keyboard)
-    elif message.text == "Пожалуй-ка я пойду направо...":
+    elif message.text == locations['cave']['choice2']:
         user_dict[str(message.chat.id)]['first_question'] = message.text
         save_user_data(user_dict)
-        bot.send_message(message.chat.id, right_choice)
+        bot.send_message(message.chat.id, locations['sea']['message'])
         keyboard = types.ReplyKeyboardMarkup(row_width=2)
-        button_swim = types.KeyboardButton(text="Будь что будет, поплыву...")
-        button_not_swim = types.KeyboardButton(text="Буду надеяться на лучшее, а лучше разведу огонь")
+        button_swim = types.KeyboardButton(text=locations['sea']['choice1'])
+        button_not_swim = types.KeyboardButton(text=locations['sea']['choice2'])
         keyboard.add(button_swim, button_not_swim)
         bot.send_photo(message.chat.id, open('beach.jpg', 'rb'))
         return bot.send_message(message.chat.id, "Что будешь делать?", reply_markup=keyboard)
-    elif message.text == "Я очень голоден, не могу удержаться...":
+    elif message.text == locations['apple_tree']['choice1']:
         user_dict[str(message.chat.id)]['second_question']=message.text
-        user_dict[str(message.chat.id)]['result']=lose2
+        user_dict[str(message.chat.id)]['result']=locations['results']['lose2']
         save_user_data(user_dict)
         bot.send_photo(message.chat.id, open('apple.jpg', 'rb'))
-        bot.send_message(message.chat.id, lose2)
+        bot.send_message(message.chat.id,locations['results']['lose2'])
         bot.send_photo(message.chat.id, open('goat.jpg', 'rb'))
         bot.send_message(message.chat.id, again)
-    elif message.text == "Будь что будет, поплыву...":
+    elif message.text == locations['sea']['choice1']:
         user_dict[str(message.chat.id)]['second_question']=message.text
-        user_dict[str(message.chat.id)]['result']=lose1
+        user_dict[str(message.chat.id)]['result']=locations['results']['lose1']
         save_user_data(user_dict)
-        bot.send_message(message.chat.id, lose1)
+        bot.send_message(message.chat.id, locations['results']['lose1'])
         bot.send_photo(message.chat.id, open('sharks1.jpg', 'rb'))
         bot.send_message(message.chat.id, again)
-    elif message.text == "Потерплю до дома, хотя так хочется":
+    elif message.text == locations['apple_tree']['choice2']:
         user_dict[str(message.chat.id)]['second_question']=message.text
-        user_dict[str(message.chat.id)]['result']=win2
+        user_dict[str(message.chat.id)]['result']=locations['results']['win2']
         save_user_data(user_dict)
-        bot.send_message(message.chat.id, win2)
+        bot.send_message(message.chat.id, locations['results']['win2'])
         bot.send_photo(message.chat.id, open('apple_tree4.jpg', 'rb'))
         bot.send_message(message.chat.id, again)
-    elif message.text == "Буду надеяться на лучшее, а лучше разведу огонь":
+    elif message.text == locations['sea']['choice2']:
         user_dict[str(message.chat.id)]['second_question']=message.text
-        user_dict[str(message.chat.id)]['result']=win1
+        user_dict[str(message.chat.id)]['result']=locations['results']['win1']
         save_user_data(user_dict)
-        bot.send_message(message.chat.id, win1)
+        bot.send_message(message.chat.id,locations['results']['win1'])
         bot.send_photo(message.chat.id, open('fire3.jpg', 'rb'))
         bot.send_photo(message.chat.id, open('ship5.jpg', 'rb'))
         bot.send_message(message.chat.id, again)
